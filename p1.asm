@@ -23,15 +23,18 @@ Verificar_Decremento:
 ; Subrutina para incrementar el contador
 Incrementar:
    INC R0                          ; Incrementar el contador
-   CJNE R0, #0AH, Mostrar           ; Si no es 10, saltar
-   MOV R0, #09H                    ; Si llega a 10, fijarlo en 9
+   CJNE R0, #0AH, Mostrar           ; Compara R0 con 10. Si no es igual, salta a 'Mostrar'
+   MOV R0, #09H                    ; Si es 10, establecer R0 en 9
    ACALL Extra_Azucar               ; Llamar a la subrutina de "Extra azucar"
+   RET
+
+Mostrar:
    RET
 
 ; Subrutina para decrementar el contador
 Decrementar:
-   CJNE R0, #00H, Decrementar_Seg   ; Si el contador no es 0, decrementar
-   ACALL Sin_Azucar                 ; Si es 0, mostrar "Sin azucar"
+   CJNE R0, #00H, Decrementar_Seg   ; Compara si R0 es 0, si no es igual, saltar
+   ACALL Sin_Azucar                 ; Si es 0, enviar "Sin azucar"
    RET
 Decrementar_Seg:
    DEC R0                           ; Decrementar el contador
@@ -51,7 +54,7 @@ Sin_Azucar:
 
 ; Subrutina para enviar un mensaje al terminal
 Enviar_Mensaje:
-   MOV A, @DPTR                     ; Obtener el carácter actual del mensaje
+   MOVC A, @A+DPTR                     ; Obtener el carácter actual del mensaje
    JZ Fin_Mensaje                   ; Si es el final del mensaje (cero), terminar
    ACALL Transmitir_Char            ; Enviar el carácter
    INC DPTR                         ; Mover al siguiente carácter
